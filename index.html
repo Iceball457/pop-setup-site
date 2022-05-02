@@ -4,6 +4,73 @@
         <title>Pop! Setup</title>
     </head>
     <body>
+        <h1>Pop!_OS Developer Setup</h1>
+        <h2>The Dangers of the Pop!_Shop</h2>
+        <p>
+            The Pop Shop is a neat little gui for installing packages with apt and/or flatpak; however, all packages installed with the Pop Shop are put into a secure sandbox that <i>does not interact</i> with the rest of the operating system.<br>
+            This is great for system security, as no applications installed with the Pop Shop can do anything with/to your operating system! This is awful for developing, as no applications installed with the Pop Shop can do anything with/to your operating system.
+        </p>
+        <p>
+            This is most notable when using IDEs, as they will not have access to any command line packages on your PATH. IntelliJ's IDEs suffer the most here.<br>
+            Unity suffers in another way, related to the fact that dotnet is <i>not available</i> on the Pop Shop. If you install the Shop's version of unity, it will ask you to install Visual Studio Code and dotnet. Of course, you need dotnet and mono to develop in C#. Once you have installed dotnet and mono, VSCode will still throw a fit about not seeing them! How rude!
+        </p>
+        <p>
+            The solution is simple, of course: just avoid the Pop Shop when installing development software (up until the point this issue gets fixed: I reccommend a secure vs trusted toggle). And the rest of this page is dedicated to the commands I found on this journey of linux discovery.
+        </p>
+
+        <h1>template_pkg</h1>
+        <h2>repos</h2>
+        <p>You can't access anything if your computer doesn't know where to look for it. Some of these packages are not located in debian's main package repository and the commands to gain access to those repositories will be listed in this section.</p>
+        <h2>installs</h2>
+        <p>Just in case you don't know the package name, the install commands are also listed!</p>
         
+        <h1>HTTPS Transport</h1>
+        <p>apt-transport-https</p>
+        <p>Used by Microsoft's repos to tranfer data or something.</p>
+        <h2>Installs</h2>
+        <p>
+            sudo apt-get install apt-transport-https
+        </p>
+
+        <h1><a href="https://docs.microsoft.com/en-us/dotnet/core/install/linux-debian#debian-11-">.NET</a></h1>
+        <p>dotnet</p>
+        <p>.NET framework for C#, VisualBasic, and other Microsoft-y things!</p>
+        <h2>repos</h2>
+        <p>
+            wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb<br>
+            sudo dpkg -i packages-microsoft-prod.deb<br>
+            rm packages-microsoft-prod.deb
+        </p>
+        <h2>installs</h2>
+        <p>
+            sudo apt-get install -y dotnet-sdk-6.0
+        </p>
+        <h2>dependency issue</h2>
+        Pop!_OS does not come with a repo that contains the very necessary <a href="https://debian.pkgs.org/11/debian-main-amd64/libssl1.1_1.1.1n-0+deb11u1_amd64.deb.html">libssl1.1</a>. I could not find the public key that lets you access the linked repo from apt, but if necessary you should be able to download it from the link and install via eddy. This is not recommended if you can avoid it!
+        
+        <h1><a href="https://www.itzgeek.com/how-tos/linux/debian/how-to-install-visual-studio-code-on-debian-11-debian-10.html">VS Code</a></h1>
+        <p>code</p>
+        <p>Lightweight code editor with the best multi cursor hotkey (alt+click)!</p>
+        <h2>Repos</h2>
+        <p>
+            curl -sSL https://packages.microsoft.com/keys/microsoft.asc<br>
+            sudo gpg --dearmor -o /usr/share/keyrings/ms-vscode-keyring.gpg<br>
+            echo "deb [arch=amd64 signed-by=/usr/share/keyrings/ms-vscode-keyring.gpg] https://packages.microsoft.com/repos/vscode stable main"<br>
+            sudo tee /etc/apt/sources.list.d/vscode.list
+        </p>
+        <h2>Installs</h2>
+        <p>sudo apt install code</p>
+
+        <h1><a href="https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux">Unity Hub</a></h1>
+        <p>unityhub</p>
+        <h2>repos</h2>
+        <p>
+            sudo sh -c 'echo "deb https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list'<br>
+            wget -qO - https://hub.unity3d.com/linux/keys/public | sudo apt-key add -
+        </p>
+        <h2>installs</h2>
+        <p>
+            sudo apt-get install unityhub
+        </p>
     </body>
 </html>
